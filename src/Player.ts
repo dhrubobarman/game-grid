@@ -7,6 +7,8 @@ class Player {
   ctx: CanvasRenderingContext2D;
   speedX: number;
   speedY: number;
+  width: number;
+  height: number;
   constructor({
     game,
     x,
@@ -26,6 +28,8 @@ class Player {
     this.ctx = this.game.ctx;
     this.speedX = speedX;
     this.speedY = speedY;
+    this.width = this.game.cellSize;
+    this.height = this.game.cellSize;
   }
   update() {
     this.x += this.speedX;
@@ -33,7 +37,12 @@ class Player {
   }
   draw() {
     this.ctx.fillStyle = "red";
-    this.ctx.fillRect(this.x, this.y, 20, 20);
+    this.ctx.fillRect(
+      this.x * this.game.cellSize,
+      this.y * this.game.cellSize,
+      this.width,
+      this.height
+    );
     this.ctx.fill();
   }
 }

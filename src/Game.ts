@@ -9,21 +9,29 @@ class Game {
   cellSize: number;
   columns!: number;
   rows!: number;
+  eventTimer: number;
+  eventInterval: number;
+  eventUpdate: boolean;
   constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     this.canvas = canvas;
     this.ctx = ctx;
     this.width;
     this.height;
+    this.cellSize = 50;
+    this.columns;
+    this.rows;
+
+    this.eventTimer = 0;
+    this.eventInterval = 200;
+    this.eventUpdate = false;
+
     this.player = new Player({
       game: this,
       x: 0,
       y: 0,
       speedX: 1,
-      speedY: 0.5,
+      speedY: 0,
     });
-    this.cellSize = 50;
-    this.columns;
-    this.rows;
 
     window.addEventListener("resize", (e) => {
       const target = e.currentTarget as Window;
@@ -51,10 +59,22 @@ class Game {
     this.columns = Math.round(this.width / this.cellSize);
     this.rows = Math.round(this.height / this.cellSize);
   }
-  render() {
+  handlePeriodicEvents(deltaTime: number) {
+    if (this.eventTimer < this.eventInterval) {
+      this.eventTimer += deltaTime;
+      this.eventUpdate = false;
+    } else {
+      this.eventTimer = 0;
+      this.eventUpdate = true;
+    }
+  }
+  render(deltaTime: number) {
     this.drawGrid();
-    // this.player.draw();
-    // this.player.update();
+    this.handlePeriodicEvents(deltaTime);
+    if (this.eventUpdate) {
+      this.player.update();
+    }
+    this.player.draw();
   }
 }
 
